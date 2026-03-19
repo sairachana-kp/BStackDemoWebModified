@@ -1,26 +1,29 @@
 import { FETCH_PRODUCTS, SET_FAVOURITE_PRODUCT } from './actionTypes';
 
 const initialState = {
-  products: []
+  products: [],
+  allProducts: []
 };
 
-export default function(state = initialState, action) {
+export default function shelfReducer(state = initialState, action) {
   switch (action.type) {
     case FETCH_PRODUCTS:
       return {
         ...state,
-        products: action.payload
+        products: action.payload.products,
+        allProducts: action.payload.allProducts
       };
     case SET_FAVOURITE_PRODUCT:
-      const products = JSON.parse(JSON.stringify(state.products));
-      products.forEach((product) => {
-        if (product.id === action.payload.id) {
-          product.isFav = !product.isFav;
-        }
-      })
+      const toggleFav = product =>
+        product.id === action.payload.id ? { ...product, isFav: !product.isFav } : product;
+
+      const products = state.products.map(toggleFav);
+      const allProducts = state.allProducts.map(toggleFav);
+
       return {
         ...state,
-        products
+        products,
+        allProducts
       };
     default:
       return state;

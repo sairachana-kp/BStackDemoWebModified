@@ -18,7 +18,7 @@ class Shelf extends Component {
     fetchProducts: PropTypes.func.isRequired,
     products: PropTypes.array.isRequired,
     addProduct: PropTypes.func.isRequired,
-    filters: PropTypes.array,
+    filters: PropTypes.object,
     sort: PropTypes.string
   };
 
@@ -95,7 +95,7 @@ class Shelf extends Component {
 
 const mapStateToProps = state => ({
   products: state.shelf.products,
-  filters: state.filters.items,
+  filters: state.filters,
   sort: state.sort.type
 });
 

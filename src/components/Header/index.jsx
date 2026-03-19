@@ -1,13 +1,22 @@
+import { useEffect, useState } from 'react';
 import store2 from 'store2';
 import Link from 'next/link';
 import Router from 'next/router';
+import { connect } from 'react-redux';
+import { updateFilters } from '../../services/filters/actions';
 
 import useWindowSize from '../utils/useWindowSize';
 import './style.scss';
 
-const Header = () => {
+const Header = ({ filters, updateFilters }) => {
   const userName = store2.session.get('username');
   const size = useWindowSize();
+  const [searchText, setSearchText] = useState((filters && filters.search) || '');
+
+  useEffect(() => {
+    setSearchText((filters && filters.search) || '');
+  }, [filters && filters.search]);
+
   const logOutHandler = (e) => {
     e.preventDefault();
     if (userName) {
@@ -15,6 +24,20 @@ const Header = () => {
       Router.replace('/');
     } else {
       Router.replace('/signin');
+    }
+  };
+
+  const applySearch = () => {
+    updateFilters({ search: searchText });
+  };
+
+  const handleSearchInput = (event) => {
+    setSearchText(event.target.value);
+  };
+
+  const handleSearchKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      applySearch();
     }
   };
 
@@ -77,9 +100,12 @@ const Header = () => {
                 placeholder="Search"
                 className="px-4 py-1 border border-gray-300 rounded-l focus:outline-none"
                 aria-label="Search"
+                value={searchText}
+                onChange={handleSearchInput}
+                onKeyDown={handleSearchKeyDown}
               />
               <button 
-                onClick={() => window.location.reload()}
+                onClick={applySearch}
                 className="px-4 py-1 bg-gray-100 border border-l-0 border-gray-300"
                 role='button'
                 style={{ 
@@ -104,4 +130,11 @@ const Header = () => {
   );
 };
 
-export default Header;
+const mapStateToProps = state => ({
+  filters: state.filters
+});
+
+export default connect(
+  mapStateToProps,
+  { updateFilters }
+)(Header);

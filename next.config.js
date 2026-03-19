@@ -5,7 +5,10 @@ const webpack = require('webpack');
 
 const sassConfig = {
   sass: true, // use .scss files
-  modules: true // style.(m|module).css & style.(m|module).scss for module files
+  modules: true, // style.(m|module).css & style.(m|module).scss for module files
+  sassLoaderOptions: {
+    implementation: require('sass')
+  }
 }
 
 const optimizedImagesConfig = {

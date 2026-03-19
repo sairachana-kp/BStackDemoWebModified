@@ -1,15 +1,18 @@
 import { UPDATE_FILTER } from './actionTypes';
 
 const initialState = {
-  item: []
+  items: [],
+  search: '',
+  minPrice: '',
+  maxPrice: ''
 };
 
-export default function(state = initialState, action) {
+export default function filtersReducer(state = initialState, action) {
   switch (action.type) {
     case UPDATE_FILTER:
       return {
         ...state,
-        items: action.payload
+        ...action.payload
       };
     default:
       return state;
