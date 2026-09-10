@@ -9,7 +9,8 @@ import useWindowSize from '../utils/useWindowSize';
 import './style.scss';
 
 const Header = ({ filters, updateFilters }) => {
-  const userName = store2.session.get('username');
+  // Held in state so the header re-renders when the session changes (e.g. logout on the current page).
+  const [userName, setUserName] = useState(() => store2.session.get('username'));
   const size = useWindowSize();
   const [searchText, setSearchText] = useState((filters && filters.search) || '');
 
@@ -21,6 +22,7 @@ const Header = ({ filters, updateFilters }) => {
     e.preventDefault();
     if (userName) {
       store2.session.clearAll();
+      setUserName(null);
       Router.replace('/');
     } else {
       Router.replace('/signin');
