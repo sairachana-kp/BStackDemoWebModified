@@ -1,0 +1,1 @@
+Always use localhost for exploration or selector discovery
